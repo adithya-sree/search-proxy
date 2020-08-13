@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"search/src/config"
 	"time"
 )
@@ -17,8 +18,9 @@ type Client struct {
 }
 
 type Response struct {
-	Data  []Record `json:"data"`
-	Total int      `json:"total"`
+	Data          []Record `json:"data"`
+	Total         int      `json:"total"`
+	NextPageToken string   `json:"next"`
 }
 
 type Record struct {
@@ -71,7 +73,7 @@ func NewClient(conf config.Config, query string) *Client {
 }
 
 func (c *Client) BuildRequest() (*http.Request, error) {
-	req, err := http.NewRequest("GET", c.c.DeezerConfig.ApiFqdn + c.q, nil)
+	req, err := http.NewRequest("GET", c.c.DeezerConfig.ApiFqdn+url.QueryEscape(c.q), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -94,6 +96,8 @@ func (c *Client) Execute(r *http.Request) (*Response, error) {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return nil, err
+		} else if string(bodyBytes) == "" {
+			return nil, fmt.Errorf("error while excuting search request for query [%s], status code [%d]", c.q, resp.StatusCode)
 		}
 		return nil, fmt.Errorf(string(bodyBytes))
 	} else {

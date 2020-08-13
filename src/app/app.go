@@ -28,6 +28,7 @@ func NewApp(c *config.Config) *App {
 	r.HandleFunc("/ecv", h.Ecv)
 	r.HandleFunc("/running", h.Running)
 	r.HandleFunc("/uptime", m.AuthMiddleware(h.Uptime))
+	r.HandleFunc("/api/v1/cache/clear", m.AuthMiddleware(h.ClearCache))
 	r.HandleFunc("/api/v1/search/{query}", m.AuthMiddleware(h.Search))
 
 	return &App{
