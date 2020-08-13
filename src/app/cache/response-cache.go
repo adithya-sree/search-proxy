@@ -19,9 +19,7 @@ func NewCache() *InMemory {
 }
 
 func (im *InMemory) Find(query string) (*deezer.Response, error) {
-	im.Lock()
 	resp := im.Cache[query]
-	im.Unlock()
 	if resp != nil && resp.Data != nil {
 		return resp, nil
 	} else {

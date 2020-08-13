@@ -16,7 +16,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	resp, err := imMemory.Find(query)
 	if err != nil {
 		log.Printf("unable to find query [%s] results in cache, getting from initial data source", query)
-
 		c := deezer.NewClient(*h.Config, query)
 		r, err := c.BuildRequest()
 		if err != nil {
@@ -42,8 +41,9 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		imMemory.Add(query, resp)
 		log.Printf("successfully executed request for query [%v]", query)
 		common.RespondJSON(w, http.StatusOK, resp)
-	} else {
-		log.Printf("successfully found query [%s] in cache", query)
-		common.RespondJSON(w, http.StatusOK, resp)
+		return
 	}
+
+	log.Printf("successfully found query [%s] in cache", query)
+	common.RespondJSON(w, http.StatusOK, resp)
 }
