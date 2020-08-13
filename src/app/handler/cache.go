@@ -30,8 +30,10 @@ func (h *Handler) GetCacheKey(w http.ResponseWriter, r *http.Request) {
 	log.Printf("get cache key request received for key [%s]", key)
 	value, err := imMemory.Find(key)
 	if err != nil {
+		log.Printf("no cache for given key [%s]", key)
 		common.RespondError(w, http.StatusNotFound, fmt.Sprintf("cannot find cache for key [%s]", key))
 		return
 	}
+	log.Printf("successfully found cache for key [%s]", key)
 	common.RespondJSON(w, http.StatusOK, value)
 }
