@@ -38,3 +38,9 @@ func (im *InMemory) Clear() {
 	im.Cache = make(map[string]*deezer.Response)
 	im.Unlock()
 }
+
+func (im *InMemory) ClearKey(key string) {
+	im.Lock()
+	delete(im.Cache, key)
+	im.Unlock()
+}

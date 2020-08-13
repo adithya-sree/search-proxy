@@ -28,8 +28,10 @@ func NewApp(c *config.Config) *App {
 	r.HandleFunc("/ecv", h.Ecv)
 	r.HandleFunc("/running", h.Running)
 	r.HandleFunc("/uptime", m.AuthMiddleware(h.Uptime))
-	r.HandleFunc("/api/v1/cache/clear", m.AuthMiddleware(h.ClearCache))
-	r.HandleFunc("/api/v1/search/{query}", m.AuthMiddleware(h.Search))
+	r.HandleFunc("/api/v1/cache/clear", m.AuthMiddleware(h.ClearCache)).Methods("POST")
+	r.HandleFunc("/api/v1/cache/{key}", m.AuthMiddleware(h.GetCacheKey)).Methods("GET")
+	r.HandleFunc("/api/v1/cache/{key}/clear", m.AuthMiddleware(h.ClearCacheKey)).Methods("POST")
+	r.HandleFunc("/api/v1/search/{query}", m.AuthMiddleware(h.Search)).Methods("GET")
 
 	return &App{
 		Router: r,
