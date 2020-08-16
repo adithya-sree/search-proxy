@@ -24,7 +24,7 @@ func NewApp(c *config.Config) *App {
 	m := middleware.NewMiddleware(c)
 	h := handler.NewHandler(c)
 
-	r.HandleFunc("/", h.Ecv)
+	r.HandleFunc("/", h.Base)
 	r.HandleFunc("/ecv", h.Ecv)
 	r.HandleFunc("/running", h.Running)
 	r.HandleFunc("/uptime", m.AuthMiddleware(h.Uptime))
@@ -32,6 +32,7 @@ func NewApp(c *config.Config) *App {
 	r.HandleFunc("/api/v1/cache/{key}", m.AuthMiddleware(h.GetCacheKey)).Methods("GET")
 	r.HandleFunc("/api/v1/cache/{key}/clear", m.AuthMiddleware(h.ClearCacheKey)).Methods("POST")
 	r.HandleFunc("/api/v1/search/{query}", m.AuthMiddleware(h.Search)).Methods("GET")
+	r.HandleFunc("/api/v2/search/{query}", m.AuthMiddleware(h.SearchV2)).Methods("GET")
 
 	return &App{
 		Router: r,

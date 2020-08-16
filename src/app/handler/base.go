@@ -24,7 +24,9 @@ func (h *Handler) Ecv(w http.ResponseWriter, _ *http.Request) {
 
 func (h *Handler) Base(w http.ResponseWriter, _ *http.Request) {
 	log.Println("base request received")
-	common.RespondJSON(w, http.StatusOK, common.Response{Message: "search server is running"})
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte("<html><body><h1>Search Proxy</h1><p>Proxy and cache service for music search service.</p></body></html>"))
 }
 
 func (h *Handler) Running(w http.ResponseWriter, _ *http.Request) {
